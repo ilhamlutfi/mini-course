@@ -17,11 +17,11 @@ class CourseController extends Controller
     public function index()
     {
         if (auth()->user()->role == 'owner') {
-            $courses = Course::with('user:id,name,role')->when(request('search'), function ($query) {
+            $courses = Course::with('user:id,name')->when(request('search'), function ($query) {
                 $query->where('title', 'like', '%' . request('search') . '%');
             })->latest()->paginate(6);
         } elseif (auth()->user()->role == 'mentor') {
-            $courses = Course::with('user:id,name,role')->when(request('search'), function ($query) {
+            $courses = Course::with('user:id,name')->when(request('search'), function ($query) {
                 $query->where('title', 'like', '%' . request('search') . '%');
             })->where('mentor_id', auth()->user()->id)->latest()->paginate(6);
         }
@@ -50,7 +50,7 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => 'required|max:128',
+            'title' => 'required|max:128|unique:courses,title',
             'description' => 'required|max:128',
             'price' => 'required|numeric',
             'mentor_id' => 'required',
@@ -71,7 +71,7 @@ class CourseController extends Controller
     public function show(string $id)
     {
         return view('back.course.show', [
-            'course' => Course::with('user:id,name,role')->findOrFail($id)
+            'course' => Course::with('user:id,name')->findOrFail($id)
         ]);
     }
 
@@ -80,7 +80,10 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('back.course.edit', [
+            'mentors' => User::whereRole('mentor')->get(),
+            'course' => Course::with('user:id,name')->findOrFail($id)
+        ]);
     }
 
     /**
@@ -88,7 +91,20 @@ class CourseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'title' => 'required|max:128|unique:courses,title,'. $id,
+            'description' => 'required|max:128',
+            'price' => 'required|numeric',
+            'mentor_id' => 'required',
+        ]);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Course not updated');
+        }
+
+        Course::findOrFail($id)->update($data);
+
+        return redirect()->route('lms.courses.index')->with('success', 'Course updated successfully');
     }
 
     /**
@@ -96,6 +112,8 @@ class CourseController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Course::findOrFail($id)->delete();
+
+        return redirect()->route('lms.courses.index')->with('success', 'Course deleted successfully');
     }
 }

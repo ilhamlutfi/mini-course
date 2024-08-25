@@ -42,8 +42,16 @@
                     </div>
 
                     <div class="card-footer">
-                        <a href="{{ url()->previous() }}" class="btn btn-success ms-1 float-end">Edit</a>
-                        <a href="{{ url()->previous() }}" class="btn btn-secondary float-end">Back</a>
+                        {{-- submit delete button --}}
+                        <form action="{{ route('lms.courses.destroy', $course->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
+                        </form>
+
+                        <a href="{{ route('lms.courses.edit', $course->id) }}" class="btn btn-success ms-1 float-end">Edit</a>
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary float-start">Back</a>
                     </div>
                 </div>
             </div>
