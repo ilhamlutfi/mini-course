@@ -53,7 +53,23 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Payments</a>
+                                    <a class="nav-link" href="{{ route('lms.payments.index') }}">Payments</a>
+                                </li>
+                            @endif
+
+                            @if (auth()->user()->role == 'mentor')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lms.courses.index') }}">Courses</a>
+                                </li>
+                            @endif
+
+                            @if (auth()->user()->role == 'mentee')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lms.courses.index') }}">My Courses</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lms.courses.index') }}">Search Courses</a>
                                 </li>
                             @endif
                        @endauth
