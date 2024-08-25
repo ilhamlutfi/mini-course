@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('mentor_id')->constrained('users')->onDeleteCascade();
             $table->string('title');
             $table->text('description');
+            $table->string('price');
             $table->timestamps();
         });
     }

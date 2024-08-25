@@ -37,23 +37,23 @@
                        @auth
                             @if (auth()->user()->role == 'owner')
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Dashboard</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.courses.index') }}">Courses</a>
+                                    <a class="nav-link" href="{{ route('lms.courses.index') }}">Courses</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">Mentors</a>
+                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Mentors</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">Mentee</a>
+                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Mentee</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">Payments</a>
+                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Payments</a>
                                 </li>
                             @endif
                        @endauth

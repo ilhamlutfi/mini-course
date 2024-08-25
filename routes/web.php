@@ -10,9 +10,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-    Route::resource('/courses', CourseController::class)->names('admin.courses');
-})->middleware('auth');
+Route::prefix('lms')->middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('lms.dashboard');
+    Route::resource('/courses', CourseController::class)->names('lms.courses');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

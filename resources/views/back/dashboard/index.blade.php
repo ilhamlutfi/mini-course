@@ -14,7 +14,7 @@
                                     <div class="card-header">Total Course</div>
                                     <div class="card-body">{{ $totalCourse }}</div>
                                     <div class="card-footer">
-                                        <a href="{{ route('admin.courses.index') }}" class="btn btn-primary btn-sm float-end">View Course</a>
+                                        <a href="{{ route('lms.courses.index') }}" class="btn btn-primary btn-sm float-end">View Course</a>
                                     </div>
                                 </div>
                             </div>
