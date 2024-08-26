@@ -17,7 +17,11 @@ Route::prefix('lms')->middleware(['auth'])->group(function () {
 
     Route::resource('/courses', CourseController::class)->names('lms.courses');
 
-    Route::resource('/course-video', CourseVideoController::class)->names('lms.videos');
+    Route::get('/course-video/create/{course}', [CourseVideoController::class, 'createVideo'])->name('lms.videos.create_video');
+
+    Route::resource('/course-video', CourseVideoController::class)
+    ->except(['create'])
+    ->names('lms.videos');
 
     Route::put('/payments/{payment}/approved', [PaymentController::class, 'approvedCourse'])->name('lms.payments.approved');
     Route::resource('/payments', PaymentController::class)->names('lms.payments');

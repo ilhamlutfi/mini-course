@@ -73,7 +73,7 @@ class CourseController extends Controller
     {
         $videos = CourseVideo::with('course:id,title')
         ->where('course_id', $id)
-        ->latest()->paginate(10);
+        ->paginate(10);
 
         return view('back.course.show', [
             'course' => Course::with('user:id,name')->findOrFail($id),

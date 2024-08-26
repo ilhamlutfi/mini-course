@@ -4,7 +4,7 @@
             Course Video
 
             @if (auth()->user()->role != 'mentee')
-                <a href="" class="btn btn-sm btn-primary float-end">Add Video</a>
+                <a href="{{ route('lms.videos.create_video', $course->id) }}" class="btn btn-sm btn-primary float-end">Add Video</a>
             @endif
         </div>
 
