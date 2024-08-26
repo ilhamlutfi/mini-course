@@ -14,7 +14,7 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        
+
                         <table class="table table-bordered table-striped">
                             <tr>
                                 <th>Title</th>
@@ -50,12 +50,14 @@
 
                     <div class="card-footer">
                         @if (auth()->user()->role != 'mentee')
-                            <form action="{{ route('lms.courses.destroy', $course->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
+                            @if (auth()->user()->role == 'owner')
+                                <form action="{{ route('lms.courses.destroy', $course->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
 
-                                <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
-                            </form>
+                                    <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
+                                </form>
+                            @endif
 
                             <a href="{{ route('lms.courses.edit', $course->id) }}"
                                 class="btn btn-success ms-1 float-end">Edit</a>

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('user_course_progress', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mentee_id')->constrained('users')->onDeleteCascade();
-            $table->foreignId('course_id')->constrained('courses')->onDeleteCascade();
-            $table->foreignId('course_video_id')->constrained('course_videos')->onDeleteCascade();
+            $table->foreignId('mentee_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
+            $table->foreignId('course_video_id')->constrained('course_videos')->onDelete('cascade');
             $table->boolean('is_completed')->default(false);
             $table->datetime('completed_at')->nullable();
             $table->timestamps();

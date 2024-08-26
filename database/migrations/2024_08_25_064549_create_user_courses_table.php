@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('user_courses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('mentee_id')->constrained('users')->onDeleteCascade();
-            $table->foreignId('course_id')->constrained('courses')->onDeleteCascade();
+            $table->foreignId('mentee_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved']);
             $table->datetime('approved_at')->nullable();
             $table->timestamps();

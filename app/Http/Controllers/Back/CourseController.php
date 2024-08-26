@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Back;
 
 use App\Models\User;
 use App\Models\Course;
-use App\Models\UserCourse;
 use App\Models\CourseVideo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CourseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('access:owner')->only('destroy');
+    }
 
     /**
      * Display a listing of the resource.
@@ -71,12 +74,16 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
+        $course = Course::with('user:id,name')->findOrFail($id);
+
+        $this->authorize('view', $course);
+
         $videos = CourseVideo::with('course:id,title')
         ->where('course_id', $id)
         ->paginate(10);
 
         return view('back.course.show', [
-            'course' => Course::with('user:id,name')->findOrFail($id),
+            'course' => $course,
             'videos' => $videos
         ]);
     }
@@ -86,9 +93,13 @@ class CourseController extends Controller
      */
     public function edit(string $id)
     {
+        $course = Course::with('user:id,name')->findOrFail($id);
+
+        $this->authorize('view', $course);
+
         return view('back.course.edit', [
             'mentors' => User::whereRole('mentor')->get(),
-            'course' => Course::with('user:id,name')->findOrFail($id)
+            'course' => $course
         ]);
     }
 
