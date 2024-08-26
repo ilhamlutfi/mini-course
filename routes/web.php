@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Back\CourseController;
+use App\Http\Controllers\Back\CourseVideoController;
 use App\Http\Controllers\Back\PaymentController;
 use App\Http\Controllers\Back\DashboardController;
 
@@ -13,7 +14,11 @@ Auth::routes();
 
 Route::prefix('lms')->middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('lms.dashboard');
+
     Route::resource('/courses', CourseController::class)->names('lms.courses');
+
+    Route::resource('/course-video', CourseVideoController::class)->names('lms.videos');
+
     Route::put('/payments/{payment}/approved', [PaymentController::class, 'approvedCourse'])->name('lms.payments.approved');
     Route::resource('/payments', PaymentController::class)->names('lms.payments');
 });

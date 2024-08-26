@@ -8,6 +8,13 @@
                     <div class="card-header">Course Detail</div>
 
                     <div class="card-body">
+                        {{-- alert --}}
+                        @if (session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        
                         <table class="table table-bordered table-striped">
                             <tr>
                                 <th>Title</th>
@@ -42,19 +49,25 @@
                     </div>
 
                     <div class="card-footer">
-                        {{-- submit delete button --}}
-                        <form action="{{ route('lms.courses.destroy', $course->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
+                        @if (auth()->user()->role != 'mentee')
+                            <form action="{{ route('lms.courses.destroy', $course->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
-                        </form>
+                                <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
+                            </form>
 
-                        <a href="{{ route('lms.courses.edit', $course->id) }}" class="btn btn-success ms-1 float-end">Edit</a>
-                        <a href="{{ url()->previous() }}" class="btn btn-secondary float-start">Back</a>
+                            <a href="{{ route('lms.courses.edit', $course->id) }}"
+                                class="btn btn-success ms-1 float-end">Edit</a>
+                        @endif
+
+                        <a href="{{ route('lms.courses.index') }}" class="btn btn-secondary float-start">Back</a>
                     </div>
                 </div>
             </div>
+
+            {{-- course video --}}
+            @include('back.course.video._index', ['course_id' => $course->id])
         </div>
     </div>
 @endsection

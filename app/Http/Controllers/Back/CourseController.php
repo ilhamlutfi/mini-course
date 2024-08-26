@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\UserCourse;
+use App\Models\CourseVideo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -70,8 +71,13 @@ class CourseController extends Controller
      */
     public function show(string $id)
     {
+        $videos = CourseVideo::with('course:id,title')
+        ->where('course_id', $id)
+        ->latest()->paginate(10);
+
         return view('back.course.show', [
-            'course' => Course::with('user:id,name')->findOrFail($id)
+            'course' => Course::with('user:id,name')->findOrFail($id),
+            'videos' => $videos
         ]);
     }
 
@@ -98,13 +104,9 @@ class CourseController extends Controller
             'mentor_id' => 'required',
         ]);
 
-        if (!$data) {
-            return redirect()->back()->with('error', 'Course not updated');
-        }
-
         Course::findOrFail($id)->update($data);
 
-        return redirect()->route('lms.courses.index')->with('success', 'Course updated successfully');
+        return redirect()->route('lms.courses.show', $id)->with('success', 'Course updated successfully');
     }
 
     /**
