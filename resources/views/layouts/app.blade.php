@@ -45,11 +45,11 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Mentors</a>
+                                    <a class="nav-link" href="{{ route('lms.mentors.index') }}">Mentors</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('lms.dashboard') }}">Mentee</a>
+                                    <a class="nav-link" href="{{ route('lms.mentees.index') }}">Mentee</a>
                                 </li>
 
                                 <li class="nav-item">
