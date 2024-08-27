@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Back;
 
-use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\UserCourse;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('access:owner')->only('destroy', 'approvedCourse');
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -24,7 +30,7 @@ class PaymentController extends Controller
                 $query->whereHas('course', function ($query) {
                     $query->where('title', 'like', '%' . request('search') . '%');
                 });
-            })->where('user_id', auth()->user()->id)->latest()->paginate(10);
+            })->where('mentee_id', auth()->user()->id)->latest()->paginate(10);
         }
 
         return view('back.payment.index', [
@@ -35,9 +41,15 @@ class PaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function paymentCourse(string $chart_id)
     {
-        //
+        $course = UserCourse::with('mentee:id,name', 'course:id,title,description,price')
+        ->where('id', $chart_id)
+        ->firstOrFail();
+
+        return view('back.payment.create', [
+            'course' => $course
+        ]);
     }
 
     /**
@@ -45,7 +57,22 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $coursePay = UserCourse::findOrFail($request->chart_id);
+
+        Payment::create([
+            'mentee_id' => $coursePay->mentee_id,
+            'course_id' => $coursePay->course_id,
+            'amount' => $coursePay->course->price,
+            'status' => 'pending',
+            'paid_at' => date('Y-m-d H:i:s', time()),
+            'approved_at' => null
+        ]);
+
+        $coursePay->update([
+            'status' => 'paid'
+        ]);
+
+        return redirect()->route('lms.payments.index')->with('success', 'Payment course successfully');
     }
 
     /**
@@ -56,22 +83,6 @@ class PaymentController extends Controller
         return view('back.payment.show', [
             'payment' => Payment::with('course:id,title', 'user:id,name')->findOrFail($id)
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -89,6 +100,13 @@ class PaymentController extends Controller
         $payment = Payment::findOrFail($id);
         $payment->update([
             'status' => 'approved',
+            'approved_at' => date('Y-m-d H:i:s', time())
+        ]);
+
+        $userCourse = UserCourse::where('mentee_id', $payment->mentee_id)
+        ->where('course_id', $payment->course_id)
+        ->first();
+        $userCourse->update([
             'approved_at' => date('Y-m-d H:i:s', time())
         ]);
 

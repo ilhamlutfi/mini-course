@@ -7,11 +7,13 @@ use App\Models\Course;
 use App\Models\CourseVideo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\UserCourse;
 
 class CourseController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('access:owner,mentor')->only('create', 'store', 'edit', 'update');
         $this->middleware('access:owner')->only('destroy');
     }
 
@@ -20,7 +22,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role == 'owner') {
+        if (auth()->user()->role == 'owner' || auth()->user()->role == 'mentee') {
             $courses = Course::with('user:id,name')->when(request('search'), function ($query) {
                 $query->where('title', 'like', '%' . request('search') . '%');
             })->latest()->paginate(6);
@@ -76,11 +78,20 @@ class CourseController extends Controller
     {
         $course = Course::with('user:id,name')->findOrFail($id);
 
-        $this->authorize('view', $course);
+        if (auth()->user()->role == 'mentor') {
+            $this->authorize('view', $course);
+        }
 
-        $videos = CourseVideo::with('course:id,title')
-        ->where('course_id', $id)
-        ->paginate(10);
+        if (auth()->user()->role != 'mentee') {
+            $videos = CourseVideo::with('course:id,title')
+            ->where('course_id', $id)
+            ->paginate(6);
+        } else {
+            $videos = UserCourse::with('course:id,title')
+            ->where('course_id', $id)
+            ->where('mentee_id', auth()->user()->id)
+            ->get();
+        }
 
         return view('back.course.show', [
             'course' => $course,
@@ -95,7 +106,9 @@ class CourseController extends Controller
     {
         $course = Course::with('user:id,name')->findOrFail($id);
 
-        $this->authorize('view', $course);
+        if (auth()->user()->role == 'mentor') {
+            $this->authorize('view', $course);
+        }
 
         return view('back.course.edit', [
             'mentors' => User::whereRole('mentor')->get(),

@@ -8,7 +8,9 @@
                     <div class="card-header">
                         Course List
 
-                        <a href="{{ route('lms.courses.create') }}" class="btn btn-primary btn-sm float-end">Create Course</a>
+                        @if (auth()->user()->role != 'mentee')
+                            <a href="{{ route('lms.courses.create') }}" class="btn btn-primary btn-sm float-end">Create Course</a>
+                        @endif
                     </div>
 
 

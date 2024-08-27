@@ -39,7 +39,7 @@
                             </thead>
 
                             <tbody>
-                                @foreach ($payments as $payment)
+                                @forelse ($payments as $payment)
                                     <tr>
                                         <td>{{ $loop->iteration + ($payments->firstItem() - 1) }}</td>
                                         <td>{{ $payment->user->name }}</td>
@@ -69,7 +69,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="8" class="text-center">No data available, please buy course first <a href="{{ route('lms.courses.index') }}">courses list</a></td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
 

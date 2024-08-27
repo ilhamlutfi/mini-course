@@ -64,6 +64,13 @@
                         @endif
 
                         <a href="{{ route('lms.courses.index') }}" class="btn btn-secondary float-start">Back</a>
+
+                        @if (auth()->user()->role == 'mentee')
+                            <form action="{{ route('lms.courses.buy', $course->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-success float-end">Buy</button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>

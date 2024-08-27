@@ -7,6 +7,7 @@ use App\Http\Controllers\Back\PaymentController;
 use App\Http\Controllers\Back\DashboardController;
 use App\Http\Controllers\Back\MenteeController;
 use App\Http\Controllers\Back\MentorController;
+use App\Http\Controllers\Back\UserCourseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,9 +43,14 @@ Route::prefix('lms')->middleware(['auth'])->group(function () {
     ->middleware('access:owner');
 
     Route::put('/payments/{payment}/approved', [PaymentController::class, 'approvedCourse'])->name('lms.payments.approved');
+    Route::get('/payments/{payment}/process', [PaymentController::class, 'paymentCourse'])->name('lms.payments.process');
     Route::resource('/payments', PaymentController::class)
+    ->except('create', 'edit', 'update')
     ->names('lms.payments')
     ->middleware('access:owner,mentee');
+
+    Route::get('/charts/{user}', [UserCourseController::class, 'chart'])->name('lms.charts');
+    Route::post('/courses/buy/{course}', [UserCourseController::class, 'buy'])->name('lms.courses.buy');
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

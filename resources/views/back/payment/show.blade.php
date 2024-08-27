@@ -48,7 +48,7 @@
                                 </td>
                             </tr>
 
-                             @if ($payment->status == 'approved')
+                            @if ($payment->status == 'approved')
                                 <tr>
                                     <th>Approved At</th>
                                     <td>{{ $payment->approved_at }}</td>
@@ -76,20 +76,22 @@
 
                     <div class="card-footer">
                         {{-- submit delete button --}}
-                        <form action="{{ route('lms.payments.destroy', $payment->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
-                        </form>
-
-                        @if ($payment->paid_at != null && $payment->status == 'pending')
-                            <form action="{{ route('lms.payments.approved', $payment->id) }}" method="POST">
-                                @method('PUT')
+                        @if (auth()->user()->role == 'owner')
+                            <form action="{{ route('lms.payments.destroy', $payment->id) }}" method="POST">
                                 @csrf
+                                @method('DELETE')
 
-                                <button type="submit" class="btn btn-success ms-1 float-end">Approved</button>
+                                <button type="submit" class="btn btn-danger ms-1 float-end">Delete</button>
                             </form>
+
+                            @if ($payment->paid_at != null && $payment->status == 'pending')
+                                <form action="{{ route('lms.payments.approved', $payment->id) }}" method="POST">
+                                    @method('PUT')
+                                    @csrf
+
+                                    <button type="submit" class="btn btn-success ms-1 float-end">Approved</button>
+                                </form>
+                            @endif
                         @endif
 
                         <a href="{{ url()->previous() }}" class="btn btn-secondary float-start">Back</a>

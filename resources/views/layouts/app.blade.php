@@ -34,7 +34,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                       @auth
+                        @auth
                             @if (auth()->user()->role == 'owner')
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('lms.dashboard') }}">Dashboard</a>
@@ -71,8 +71,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('lms.courses.index') }}">Search Courses</a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lms.payments.index') }}">Payments</a>
+                                </li>
                             @endif
-                       @endauth
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -91,6 +95,12 @@
                                 </li>
                             @endif
                         @else
+                            @if (auth()->user()->role == 'mentee')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('lms.charts', auth()->user()->id) }}">Chart</a>
+                                </li>
+                            @endif
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
