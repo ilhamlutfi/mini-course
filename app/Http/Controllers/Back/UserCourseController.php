@@ -9,6 +9,12 @@ use App\Http\Controllers\Controller;
 
 class UserCourseController extends Controller
 {
+    public function __construct()
+    {
+       $this->middleware('access:owner,mentee')->only('chart');
+       $this->middleware('access:owner')->only('destroy');
+    }
+
     public function buy(Request $request, $course_id)
     {
         // get user

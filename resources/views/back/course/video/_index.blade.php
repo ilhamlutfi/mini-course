@@ -31,7 +31,11 @@
                 @endforeach
             @else
                 <h5 class="text-center">
-                    No video found please, add video
+                    @if (auth()->user()->role != 'mentee')
+                        No video found please, add video
+                    @else
+                        No video waiting payment/approved
+                    @endif
                 </h5>
             @endif
         </div>

@@ -85,12 +85,19 @@ class CourseController extends Controller
         if (auth()->user()->role != 'mentee') {
             $videos = CourseVideo::with('course:id,title')
             ->where('course_id', $id)
-            ->paginate(6);
+            ->get();
         } else {
-            $videos = UserCourse::with('course:id,title')
+            $getUserCourse = UserCourse::with('course:id,title')
             ->where('course_id', $id)
             ->where('mentee_id', auth()->user()->id)
-            ->get();
+            ->where('approved_at', '!=', null)
+            ->first();
+
+            if ($getUserCourse) {
+                $videos = $getUserCourse->course->videos;
+            } else {
+                $videos = collect(); // Mengembalikan koleksi kosong jika tidak ada UserCourse
+            }
         }
 
         return view('back.course.show', [

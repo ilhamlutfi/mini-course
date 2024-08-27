@@ -42,7 +42,7 @@
                                                 <a href="{{ route('lms.payments.process', $course->id) }}"
                                                     class="btn btn-success ms-1 float-end">Payment</a>
 
-                                                <form action="{{ route('lms.mentees.destroy', $course->id) }}"
+                                                <form action="{{ route('lms.charts.delete', $course->id) }}"
                                                     method="POST">
                                                     @csrf
                                                     @method('DELETE')

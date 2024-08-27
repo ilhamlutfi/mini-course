@@ -50,6 +50,7 @@ Route::prefix('lms')->middleware(['auth'])->group(function () {
     ->middleware('access:owner,mentee');
 
     Route::get('/charts/{user}', [UserCourseController::class, 'chart'])->name('lms.charts');
+    Route::delete('/charts/{course}', [UserCourseController::class, 'destroy'])->name('lms.charts.delete');
     Route::post('/courses/buy/{course}', [UserCourseController::class, 'buy'])->name('lms.courses.buy');
 });
 
